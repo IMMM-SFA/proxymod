@@ -1,0 +1,9 @@
+2018-01-27 21:13:44,439 - box_logger - INFO - CONFIG: [PARAMETER] in_dir -- [VALUE] /users/ladmin/repos/github/box/example/inputs
+2018-01-27 21:13:44,440 - box_logger - INFO - CONFIG: [PARAMETER] in_file_one -- [VALUE] /users/ladmin/repos/github/box/example/inputs/in_file_one.csv
+2018-01-27 21:13:44,440 - box_logger - INFO - CONFIG: [PARAMETER] in_file_two -- [VALUE] /users/ladmin/repos/github/box/example/inputs/in_file_two.csv
+2018-01-27 21:13:44,440 - box_logger - INFO - CONFIG: [PARAMETER] model_name -- [VALUE] proxy_gcam
+2018-01-27 21:13:44,440 - box_logger - INFO - CONFIG: [PARAMETER] out_dir -- [VALUE] /users/ladmin/repos/github/box/example/outputs/proxy_gcam_outputs
+2018-01-27 21:13:44,440 - box_logger - INFO - CONFIG: [PARAMETER] out_file_one -- [VALUE] /users/ladmin/repos/github/box/example/outputs/proxy_gcam_outputs/output1_{}_{}.csv
+2018-01-27 21:13:44,440 - box_logger - INFO - CONFIG: [PARAMETER] out_file_two -- [VALUE] /users/ladmin/repos/github/box/example/outputs/proxy_gcam_outputs/output2_{}_{}.csv
+2018-01-27 21:13:44,440 - box_logger - INFO - Starting proxy_gcam
+2018-01-27 21:13:46,445 - box_logger - INFO - Completed proxy_gcam

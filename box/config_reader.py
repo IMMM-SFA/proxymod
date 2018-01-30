@@ -53,14 +53,15 @@ class ReadConfig:
         # input directory full path
         self.in_dir = self.check_dir(i['in_dir'])
 
-        try:
+        if in_one is None:
             # fake input file one name with extension
             self.in_file_one = self.check_file(os.path.join(self.in_dir, i['in_file_one']))
-
-            # fake input file two name with extension
-            self.in_file_two = self.check_file(os.path.join(self.in_dir, i['in_file_two']))
-        except KeyError:
+        else:
             self.in_file_one = in_one
+
+        if in_two is None:
+            self.in_file_two = self.check_file(os.path.join(self.in_dir, i['in_file_two']))
+        else:
             self.in_file_two = in_two
 
         # fake output file one name with extension

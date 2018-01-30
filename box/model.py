@@ -4,7 +4,9 @@ Model interface for box model.
 @author:  Chris R. Vernon (chris.vernon@pnnl.gov)
 """
 
+import collections
 import logger
+import math
 import time
 
 from config_reader import ReadConfig
@@ -12,13 +14,10 @@ from config_reader import ReadConfig
 
 class Box:
 
-    def __init__(self, config=None, model_name=None, model_order=0, start_yr=None, end_yr=None, step=None,
+    def __init__(self, config=None, model_name=None, start_yr=None, end_yr=None, step=None,
                  target_yr=None, in_one=None, in_two=None):
 
         self.c = ReadConfig(config, model_name, in_one, in_two)
-
-        # first model (0) or second (1)
-        self.model_order = model_order
 
         # start year in YYYY format
         if start_yr is None:
@@ -44,13 +43,18 @@ class Box:
         else:
             self.target_yr = int(target_yr)
 
-        # for coupling transfer
-        self.out_one_dict = {}
-        self.out_two_dict = {}
+        self.yr_range = self.set_yr_range()
 
         # set initial values for for sum and max params
-        self.param_1 = None
-        self.param_2 = None
+        if in_one is None:
+            self.param_1 = None
+        else:
+            self.param_1 = in_one
+
+        if in_two is None:
+            self.param_2 = None
+        else:
+            self.param_2 = in_two
 
         self.log = self.c.log
 
@@ -64,20 +68,17 @@ class Box:
         else:
             self.run = 'step'
 
+        self.log.info('Starting {}'.format(self.c.model_name))
+
         # mirror configuration file in log file
         self.log_config()
 
-        self.log.info('Starting {}'.format(self.c.model_name))
+        self.prepare()
 
-        # run model
-        self.model()
+        self.idx = 0
+        self.set_yr = 0
 
-        self.log.info('Completed {}'.format(self.c.model_name))
-
-        # remove any handlers that may exist
-        logger.kill_log(self.log)
-
-    def model(self):
+    def prepare(self):
         """
         Run box model.
         """
@@ -90,177 +91,132 @@ class Box:
             self.log.error(msg)
             raise(RuntimeError(msg))
 
-        # process data
-        if self.run == 'all':
-            self.execute_all()
+        # read and modify input data
+        self.read_data()
+
+    def close(self):
+
+        self.log.info('Completed {}'.format(self.c.model_name))
+
+        # remove any handlers that may exist
+        logger.kill_log(self.log)
+
+    def set_yr_range(self):
+        """
+        Set year range to evaluate.
+
+        :return:                list of years
+        """
+
+        if (self.start_year is None) and (self.end_year is None):
+            return [self.target_yr]
 
         else:
-            self.execute_step()
+            return range(self.start_year, self.end_year + self.step, self.step)
 
-    def read_inputs(self):
+    def modify(self):
         """
-        Read in files and set initial parameter value (1:sum and 2:max of input)
+        Modify dictionary values to be square root of each value.
+
+        :param d:               dictionary {yr: value}
+        :return:                dictionary {yr: value}
         """
-        # check for coupling
-        if type(self.c.in_file_one) is dict and type(self.c.in_file_two) is dict:
+        yr = str(self.set_yr)
+        self.param_1[yr] = math.sqrt(self.param_1[yr])
+        self.param_2[yr] = math.sqrt(self.param_2[yr])
 
-            if self.model_order == 0:
+    @staticmethod
+    def read_csv(f, yr_range):
+        """
+        Read CSV to dictionary in format { yr: value }
 
-                for k in self.c.in_file_one.keys():
-                    self.param_1 = sum(self.c.in_file_one[k])
+        :param f:               full path with filename and extension of input CSV
+        :return:                dictionary
+        """
+        d = {}
+        with open(f, 'rU') as o:
 
-                for k in self.c.in_file_two.keys():
-                    self.param_2 = max(self.c.in_file_two[k])
+            # pass header
+            o.next()
 
-            if self.model_order == 1:
-                self.param_1 = {}
-                self.param_2 = {}
+            for line in o:
+                row = line.strip().split(',')
 
-                for k in self.c.in_file_one.keys():
-                    self.param_1[k] = float(self.c.in_file_one[k]) / 8
+                if int(row[0]) in yr_range:
 
-                for k in self.c.in_file_two.keys():
-                    self.param_2[k] = float(self.c.in_file_two[k]) / 8
+                    d[row[0]] = float(row[1])
+
+        return d
+
+    def read_data(self):
+        """
+        Read inputs to dictionary and modify values.
+        """
+        typ_1 = type(self.c.in_file_one)
+        typ_2 = type(self.c.in_file_two)
+
+        # if both inputs are CSV
+        if (typ_1 is str) and (typ_2 is str):
+
+            self.param_1 = self.read_csv(self.c.in_file_one, self.yr_range)
+            self.param_2 = self.read_csv(self.c.in_file_two, self.yr_range)
+
+        elif (typ_1 is str) and (typ_2 is dict):
+
+            self.param_1 = self.read_csv(self.c.in_file_one, self.yr_range)
+            self.param_2 = self.c.in_file_two
+
+        elif (typ_1 is dict) and (typ_2 is str):
+
+            self.param_1 = self.c.in_file_one
+            self.param_2 = self.read_csv(self.c.in_file_two, self.yr_range)
+
+        elif (typ_1 is dict) and (typ_2 is dict):
+
+            self.param_1 = self.c.in_file_one
+            self.param_2 = self.c.in_file_two
 
         else:
+            msg = "Type for either input one or two must be either 'str' or 'dict'"
+            self.log.error(msg)
+            raise(ValueError(msg))
 
-            # if first model in order
-            if self.model_order == 0:
-
-                # read in file one
-                with open(self.c.in_file_one) as one:
-
-                    # pass header
-                    one.next()
-
-                    for line in one:
-                        self.param_1 = sum([float(i) for i in line.strip().split(',')])
-
-                # read in file two
-                with open(self.c.in_file_two) as two:
-
-                    # pass header
-                    two.next()
-
-                    for line in two:
-                        self.param_2 = max([float(i) for i in line.strip().split(',')])
-
-            else:
-
-                self.param_1 = {}
-                with open(self.c.in_file_one) as one:
-
-                    one.next()
-
-                    for line in one:
-                        r = line.strip().split(',')
-                        self.param_1[r[0]] = float(r[1]) / 8
-
-                self.param_2 = {}
-                with open(self.c.in_file_two) as two:
-
-                    two.next()
-
-                    for line in two:
-                        rx = line.strip().split(',')
-                        self.param_2[rx[0]] = float(rx[1]) / 4
-
-    def execute_step(self):
+    @staticmethod
+    def build_output(f, d):
         """
-        Process specific time step
+
         :return:
         """
-        # read input files
-        self.read_inputs()
+        with open(f, 'w') as out:
 
-        if self.model_order == 0:
+            out.write('year,value\n')
 
-            # write output file one
-            with open(self.c.out_file_one.format(self.c.model_name, self.target_yr), 'w') as out:
+            for k in d.keys():
+                out.write('{},{}\n'.format(k, d[k]))
 
-                out.write('year,vals\n')
-
-                out.write('{},{}\n'.format(self.target_yr, self.param_1))
-
-            # write output file two
-            with open(self.c.out_file_two.format(self.c.model_name, self.target_yr), 'w') as out_two:
-
-                out_two.write('year,vals\n')
-
-                out_two.write('{},{}\n'.format(self.target_yr, self.param_2))
-
-        else:
-            # write output file one
-            with open(self.c.out_file_one.format(self.c.model_name, self.target_yr), 'w') as out:
-
-                out.write('year,vals\n')
-
-                out.write('{},{}\n'.format(self.target_yr, self.param_1[str(self.target_yr)]))
-
-            # write output file two
-            with open(self.c.out_file_two.format(self.c.model_name, self.target_yr), 'w') as out_two:
-
-                out_two.write('year,vals\n')
-
-                out_two.write('{},{}\n'.format(self.target_yr, self.param_2[str(self.target_yr)]))
-
-    def execute_all(self):
+    def advance(self):
         """
-        Execute all time steps at once.  Create two output files that 1) sum values in file one
+        Execute time steps.  Create two output files that 1) sum values in file one
         and 2) get the max of the values in file two.
         """
-        # read input files
-        self.read_inputs()
-
-        yrs = '{}_{}'.format(self.start_year, self.end_year)
-
-        if self.model_order == 0:
-
-            # write output file one
-            with open(self.c.out_file_one.format(self.c.model_name, yrs), 'w') as out:
-
-                out.write('year,vals\n')
-
-                for yr in range(self.start_year, self.end_year + self.step, self.step):
-
-                    out.write('{},{}\n'.format(yr, self.param_1))
-                    self.out_one_dict[str(yr)] = self.param_1
-
-                    self.param_1 += self.param_1
-
-            # write output file one
-            with open(self.c.out_file_two.format(self.c.model_name, yrs), 'w') as out_two:
-
-                out_two.write('year,vals\n')
-
-                for yr in range(self.start_year, self.end_year + self.step, self.step):
-
-                    out_two.write('{},{}\n'.format(yr, self.param_2))
-                    self.out_two_dict[str(yr)] = self.param_2
-
-                    self.param_2 += self.param_2
-
+        if self.idx == 0:
+            self.set_yr = self.start_year
+            self.idx += 1
         else:
+            self.set_yr += self.step
 
-            # write output file one
-            with open(self.c.out_file_one.format(self.c.model_name, yrs), 'w') as out:
+        self.modify()
 
-                out.write('year,vals\n')
+        if self.run == 'all':
+            yrs = '{}_{}'.format(self.start_year, self.end_year)
+        else:
+            yrs = self.target_yr
 
-                for yr in range(self.start_year, self.end_year + self.step, self.step):
+        of_1 = self.c.out_file_one.format(self.c.model_name, yrs)
+        of_2 = self.c.out_file_two.format(self.c.model_name, yrs)
 
-                    out.write('{},{}\n'.format(yr, self.param_1[str(yr)]))
-                    self.out_one_dict[str(yr)] = self.param_1[str(yr)]
-
-            # write output file one
-            with open(self.c.out_file_two.format(self.c.model_name, yrs), 'w') as out_two:
-
-                out_two.write('year,vals\n')
-
-                for yr in range(self.start_year, self.end_year + self.step, self.step):
-
-                    out_two.write('{},{}\n'.format(yr, self.param_2[str(yr)]))
-                    self.out_two_dict[str(yr)] = self.param_2[str(yr)]
+        self.build_output(of_1, self.param_1)
+        self.build_output(of_2, self.param_2)
 
     def log_config(self):
         """
@@ -276,8 +232,3 @@ class Box:
 
                 # log result
                 self.log.info('CONFIG: [PARAMETER] {0} -- [VALUE] {1}'.format(i, x))
-
-
-if __name__ == '__main__':
-
-    Box()
