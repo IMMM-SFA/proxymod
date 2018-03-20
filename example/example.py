@@ -18,7 +18,6 @@ def file_pass_all(config_1, config_2):
     # run first model
     model_1 = Box(config=config_1,
                   model_name='proxy_gcam',
-                  model_order=0,
                   start_yr=2010,
                   end_yr=2100,
                   step=5)
@@ -26,7 +25,6 @@ def file_pass_all(config_1, config_2):
     # run second model
     model_2 = Box(config=config_2,
                   model_name='proxy_cerf',
-                  model_order=1,
                   start_yr=2010,
                   end_yr=2100,
                   step=5)
@@ -43,13 +41,11 @@ def file_pass_step(config_1, config_2):
     # run first model
     model_1 = Box(config=config_1,
                   model_name='proxy_gcam',
-                  model_order=0,
                   target_yr=2010)
 
     # run second model
     model_2 = Box(config=config_2,
                   model_name='proxy_cerf',
-                  model_order=1,
                   target_yr=2010)
 
 
@@ -64,7 +60,6 @@ def one_way(config_1, config_2):
     # run first model
     model_1 = Box(config=config_1,
                   model_name='proxy_gcam',
-                  model_order=0,
                   start_yr=2010,
                   end_yr=2100,
                   step=5)
@@ -72,7 +67,6 @@ def one_way(config_1, config_2):
     # run second model
     model_2 = Box(config=config_2,
                   model_name='proxy_cerf',
-                  model_order=1,
                   in_one=model_1.out_one_dict,
                   in_two=model_1.out_two_dict,
                   start_yr=2010,
@@ -95,7 +89,7 @@ def two_way(config_1, config_2, start_yr=2010, end_yr=2020, step=5):
                   end_yr=end_yr,
                   step=step)
 
-    # run second model
+    # run second model as parameterized by model_1
     model_2 = Box(config=config_2,
                   model_name='proxy_cerf',
                   in_one=model_1.param_1,
@@ -104,6 +98,7 @@ def two_way(config_1, config_2, start_yr=2010, end_yr=2020, step=5):
                   end_yr=end_yr,
                   step=step)
 
+    # run each year 
     for _ in range(start_yr, end_yr + step, step):
 
         model_1.advance()
@@ -126,10 +121,10 @@ if __name__ == "__main__":
     # file_pass_all(config_1, config_2)
 
     # file pass with one year ran at a time
-    # file_pass_step(config_1, config_2b)
+    file_pass_step(config_1, config_2b)
 
     # one-way coupling from model_1 to model_2
     # one_way(config_1, config_2c)
 
     # two-way coupling from model_1 to model_2 to model_1
-    two_way(config_1, config_2c, 2010, 2020, 5)
+    # two_way(config_1, config_2c, 2010, 2020, 5)
