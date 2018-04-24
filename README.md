@@ -72,7 +72,7 @@ in_file_two = in_file_two.csv
 # output directory full path
 out_dir = /example/outputs
 ```
-There may not be a need to include all of the content in this configuration file.  For instance, if you were inheriting the output files from one model run using a previous model's outputs (see "Loose coupling - file transfer" section below) you could remove the `[INPUTS]` section of the config file.  The following details optional versus required sections of the configuration file:
+There may not be a need to include all of the content in this configuration file.  For instance, if you were inheriting the output files from one model run using a previous model's outputs (see "Loose coupling - one-way - run all timesteps" section below) you could remove the `[INPUTS]` section of the config file.  The following details optional versus required sections of the configuration file:
 
 | Parameter | Type | Description |
 | --- | --- | --- |
