@@ -1,6 +1,0 @@
-2018-04-24 15:00:58,740 - proxymod_logger_model_3 - INFO - Starting model_3
-2018-04-24 15:00:58,741 - proxymod_logger_model_3 - INFO - CONFIG: [PARAMETER] in_file_one -- [VALUE] /Users/d3y010/repos/github/proxymod/example/outputs/model_2_outputs/output1_model_2_2010.csv
-2018-04-24 15:00:58,742 - proxymod_logger_model_3 - INFO - CONFIG: [PARAMETER] in_file_two -- [VALUE] /Users/d3y010/repos/github/proxymod/example/outputs/model_2_outputs/output2_model_2_2010.csv
-2018-04-24 15:00:58,742 - proxymod_logger_model_3 - INFO - CONFIG: [PARAMETER] model_name -- [VALUE] model_3
-2018-04-24 15:00:58,743 - proxymod_logger_model_3 - INFO - CONFIG: [PARAMETER] out_dir -- [VALUE] /Users/d3y010/repos/github/proxymod/example/outputs/model_3_outputs
-2018-04-24 15:01:03,748 - proxymod_logger_model_3 - INFO - Completed model_3
