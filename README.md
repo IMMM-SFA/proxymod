@@ -27,7 +27,7 @@ The following are some potential use-cases of **proxymod**:
 
 ## Terminology
 
-There are many different definitions for types of model coupling. **proxymod** adopts the Kraucunas (2018) nomenclature where each coupling type fits into the following two categories:  *Coupling* is defined as two or more model components exchanging information and *Forcing or boundary conditions* which are defined as the process where outputs from one model are used to drive another. These are described as the following:
+There are many different definitions for types of model coupling. **proxymod** adopts the Kraucunas (2018) nomenclature where each coupling type fits into the following two categories:  *Coupling* where two or more model components exchange information and *Forcing or boundary conditions* which are defined as the process where outputs from one model are used to drive another. These are described as the following:
 
 | Type | Term | Definition |
 | --- | ---| --- |
