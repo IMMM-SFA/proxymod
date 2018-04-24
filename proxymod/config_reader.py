@@ -47,9 +47,6 @@ class ReadConfig:
         # do you want the model to fail after 5 seconds?  0 if no, 1 if yes
         self.failure = self.valid_range(p['failure'], 0, 1, 'int')
 
-        # coupling type, 0: file transfer, 1: one-way hard, 2: two-way hard
-        self.coupling_type = self.valid_range(p['coupling_type'], 0, 2, 'int')
-
         # input directory full path
         self.in_dir = self.check_dir(i['in_dir'])
 
