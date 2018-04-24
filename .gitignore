@@ -1,5 +1,8 @@
 .pyc
 
+# jupyter notebook checkpoints
+.ipynb_checkpoints
+
 # Created by .ignore support plugin (hsz.mobi)
 # pycharm
 .idea
