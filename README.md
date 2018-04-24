@@ -150,33 +150,6 @@ config_3 = '/Users/d3y010/repos/github/proxymod/example/config_3.ini'
 loose_coupling(config_1, config_2, config_3)
 ```
 
-    2018-04-24 13:02:20,124 - proxymod_logger - INFO - Starting model_1
-    2018-04-24 13:02:20,125 - proxymod_logger - INFO - CONFIG: [PARAMETER] in_dir -- [VALUE] /Users/d3y010/repos/github/proxymod/example/inputs
-    2018-04-24 13:02:20,126 - proxymod_logger - INFO - CONFIG: [PARAMETER] in_file_one -- [VALUE] /Users/d3y010/repos/github/proxymod/example/inputs/in_file_one.csv
-    2018-04-24 13:02:20,127 - proxymod_logger - INFO - CONFIG: [PARAMETER] in_file_two -- [VALUE] /Users/d3y010/repos/github/proxymod/example/inputs/in_file_two.csv
-    2018-04-24 13:02:20,127 - proxymod_logger - INFO - CONFIG: [PARAMETER] model_name -- [VALUE] model_1
-    2018-04-24 13:02:20,128 - proxymod_logger - INFO - CONFIG: [PARAMETER] out_dir -- [VALUE] /Users/d3y010/repos/github/proxymod/example/outputs/model_1_outputs
-    2018-04-24 13:02:20,128 - proxymod_logger - INFO - CONFIG: [PARAMETER] out_file_one -- [VALUE] /Users/d3y010/repos/github/proxymod/example/outputs/model_1_outputs/output1_{}_{}.csv
-    2018-04-24 13:02:20,129 - proxymod_logger - INFO - CONFIG: [PARAMETER] out_file_two -- [VALUE] /Users/d3y010/repos/github/proxymod/example/outputs/model_1_outputs/output2_{}_{}.csv
-    2018-04-24 13:02:22,136 - proxymod_logger - INFO - Completed model_1
-    2018-04-24 13:02:22,137 - proxymod_logger - INFO - Starting model_2
-    2018-04-24 13:02:22,138 - proxymod_logger - INFO - CONFIG: [PARAMETER] in_file_one -- [VALUE] /Users/d3y010/repos/github/proxymod/example/outputs/model_1_outputs/output1_model_1_2010_2100.csv
-    2018-04-24 13:02:22,139 - proxymod_logger - INFO - CONFIG: [PARAMETER] in_file_two -- [VALUE] /Users/d3y010/repos/github/proxymod/example/outputs/model_1_outputs/output2_model_1_2010_2100.csv
-    2018-04-24 13:02:22,139 - proxymod_logger - INFO - CONFIG: [PARAMETER] model_name -- [VALUE] model_2
-    2018-04-24 13:02:22,140 - proxymod_logger - INFO - CONFIG: [PARAMETER] out_dir -- [VALUE] /Users/d3y010/repos/github/proxymod/example/outputs/model_2_outputs
-    2018-04-24 13:02:22,140 - proxymod_logger - INFO - CONFIG: [PARAMETER] out_file_one -- [VALUE] /Users/d3y010/repos/github/proxymod/example/outputs/model_2_outputs/output1_{}_{}.csv
-    2018-04-24 13:02:22,141 - proxymod_logger - INFO - CONFIG: [PARAMETER] out_file_two -- [VALUE] /Users/d3y010/repos/github/proxymod/example/outputs/model_2_outputs/output2_{}_{}.csv
-    2018-04-24 13:02:32,143 - proxymod_logger - INFO - Completed model_2
-    2018-04-24 13:02:32,144 - proxymod_logger - INFO - Starting model_3
-    2018-04-24 13:02:32,145 - proxymod_logger - INFO - CONFIG: [PARAMETER] in_file_one -- [VALUE] /Users/d3y010/repos/github/proxymod/example/outputs/model_2_outputs/output1_model_2_2010_2100.csv
-    2018-04-24 13:02:32,145 - proxymod_logger - INFO - CONFIG: [PARAMETER] in_file_two -- [VALUE] /Users/d3y010/repos/github/proxymod/example/outputs/model_2_outputs/output2_model_2_2010_2100.csv
-    2018-04-24 13:02:32,146 - proxymod_logger - INFO - CONFIG: [PARAMETER] model_name -- [VALUE] model_3
-    2018-04-24 13:02:32,147 - proxymod_logger - INFO - CONFIG: [PARAMETER] out_dir -- [VALUE] /Users/d3y010/repos/github/proxymod/example/outputs/model_3_outputs
-    2018-04-24 13:02:32,147 - proxymod_logger - INFO - CONFIG: [PARAMETER] out_file_one -- [VALUE] /Users/d3y010/repos/github/proxymod/example/outputs/model_3_outputs/output1_{}_{}.csv
-    2018-04-24 13:02:32,148 - proxymod_logger - INFO - CONFIG: [PARAMETER] out_file_two -- [VALUE] /Users/d3y010/repos/github/proxymod/example/outputs/model_3_outputs/output2_{}_{}.csv
-    2018-04-24 13:02:37,154 - proxymod_logger - INFO - Completed model_3
-
-
 ### Tight coupling - one-way - run one timestep at a time
 
 This is an example of creating a three-model file exchange tight coupling. Each model runs until a single timestep and the resulting output files (two for each model) are passed to the next model in line. Each model will create its own output directory and log file.
