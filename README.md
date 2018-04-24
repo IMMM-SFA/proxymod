@@ -87,6 +87,7 @@ There may not be a need to include all of the content in this configuration file
 | `out_dir` | Required | Nested in `[OUTPUTS]` node, full path to outputs directory |
 
 ## Examples
+Run these interactively using the Jupyter Notebook version of this section: [proxymod Jupyter Notebook Examples](https://github.com/IMMM-SFA/proxymod/blob/master/example/proxymod_tutorial.ipynb)
 
 ### Loose coupling - one-way - run all timesteps
 
