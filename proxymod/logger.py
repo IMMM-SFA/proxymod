@@ -20,7 +20,7 @@ def make_log(out_dir, model_name):
 
     global loggers
 
-    nm = 'proxymod_logger'
+    nm = 'proxymod_logger_{}'.format(model_name)
 
     if loggers.get(nm):
         return loggers.get(nm)
@@ -59,5 +59,6 @@ def kill_log(log):
     """
     handlers = log.handlers[:]
     for h in handlers:
-        h.close()
         log.removeHandler(h)
+        h.flush()
+        h.close()

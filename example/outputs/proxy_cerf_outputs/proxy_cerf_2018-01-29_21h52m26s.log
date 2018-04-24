@@ -1,7 +1,0 @@
-2018-01-29 21:52:26,569 - box_logger - INFO - CONFIG: [PARAMETER] in_dir -- [VALUE] /users/ladmin/repos/github/box/example/outputs/proxy_gcam_outputs
-2018-01-29 21:52:26,569 - box_logger - INFO - CONFIG: [PARAMETER] model_name -- [VALUE] proxy_cerf
-2018-01-29 21:52:26,569 - box_logger - INFO - CONFIG: [PARAMETER] out_dir -- [VALUE] /users/ladmin/repos/github/box/example/outputs/proxy_cerf_outputs
-2018-01-29 21:52:26,569 - box_logger - INFO - CONFIG: [PARAMETER] out_file_one -- [VALUE] /users/ladmin/repos/github/box/example/outputs/proxy_cerf_outputs/output1_{}_{}.csv
-2018-01-29 21:52:26,569 - box_logger - INFO - CONFIG: [PARAMETER] out_file_two -- [VALUE] /users/ladmin/repos/github/box/example/outputs/proxy_cerf_outputs/output2_{}_{}.csv
-2018-01-29 21:52:26,570 - box_logger - INFO - Starting proxy_cerf
-2018-01-29 21:52:28,575 - box_logger - INFO - Completed proxy_cerf

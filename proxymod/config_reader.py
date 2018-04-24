@@ -5,10 +5,10 @@ Reads config.ini and validates parameters.
 """
 
 import argparse
-import logger
 import os
 
 from configobj import ConfigObj
+import proxymod.logger as logger
 
 
 class ReadConfig:
@@ -37,9 +37,23 @@ class ReadConfig:
         self.log = logger.make_log(self.out_dir, self.model_name)
 
         # get config keys
-        p = c['PROJECT']
-        i = c['INPUTS']
-        o = c['OUTPUTS']
+        try:
+            p = c['PROJECT']
+        except KeyError:
+            raise("Missing [PROJECT] node in {}".format(ini))
+
+        try:
+            i = c['INPUTS']
+        except KeyError:
+            if (in_one is not None) and (in_two is not None):
+                i = None
+            else:
+                raise("Missing [INPUTS] node in {}.  Must define inputs since none are being passed into the model as parameters.".format(ini))
+
+        try:
+            o = c['OUTPUTS']
+        except KeyError:
+            raise("Missing [OUTPUTS] node in {}.".format(ini))
 
         # desired minimum model runtime in seconds
         self.runtime = self.valid_range(p['runtime'], 0, None, 'int')
@@ -48,7 +62,8 @@ class ReadConfig:
         self.failure = self.valid_range(p['failure'], 0, 1, 'int')
 
         # input directory full path
-        self.in_dir = self.check_dir(i['in_dir'])
+        if i is not None:
+            self.in_dir = self.check_dir(i['in_dir'])
 
         if in_one is None:
             # fake input file one name with extension
@@ -118,7 +133,6 @@ class ReadConfig:
             return v
 
         elif (v < start) or (v > end):
-            print '2'
             raise(ValueError("Value '{}' is not within range {} to {}".format(v, start, end)))
 
         else:

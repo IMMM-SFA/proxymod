@@ -4,11 +4,12 @@ Model interface for box model.
 @author:  Chris R. Vernon (chris.vernon@pnnl.gov)
 """
 
-import logger
+
 import math
 import time
 
-from config_reader import ReadConfig
+from proxymod.config_reader import ReadConfig
+import proxymod.logger as logger
 
 
 class Prox:
@@ -57,15 +58,18 @@ class Prox:
 
         self.log = self.c.log
 
-        if target_yr is None and start_yr is None:
+        if (target_yr is None) and (start_yr is None):
             msg = "Either 'target_yr' or 'start_yr, end_yr, and step' need to be defined."
             self.log.error(msg)
             raise(ValueError(msg))
 
         elif target_yr is None:
-            self.run = 'all'
+            yrs = '{}_{}'.format(self.start_year, self.end_year)
         else:
-            self.run = 'step'
+            yrs = self.target_yr
+
+        self.out_file_1 = self.c.out_file_one.format(self.c.model_name, yrs)
+        self.out_file_2 = self.c.out_file_two.format(self.c.model_name, yrs)
 
         self.log.info('Starting {}'.format(self.c.model_name))
 
@@ -135,15 +139,16 @@ class Prox:
         d = {}
         with open(f, 'rU') as o:
 
-            # pass header
-            o.next()
+            for idx, line in enumerate(o):
 
-            for line in o:
-                row = line.strip().split(',')
+                # pass header
+                if idx > 0:
 
-                if int(row[0]) in yr_range:
+                    row = line.strip().split(',')
 
-                    d[row[0]] = float(row[1])
+                    if int(row[0]) in yr_range:
+
+                        d[row[0]] = float(row[1])
 
         return d
 
@@ -198,24 +203,18 @@ class Prox:
         Execute time steps.  Create two output files that 1) sum values in file one
         and 2) get the max of the values in file two.
         """
-        if self.idx == 0:
+        if (self.idx == 0) and (self.target_yr is None):
             self.set_yr = self.start_year
             self.idx += 1
+        elif (self.idx == 0) and (self.target_yr is not None):
+            self.set_yr = self.target_yr
         else:
             self.set_yr += self.step
 
         self.modify()
 
-        if self.run == 'all':
-            yrs = '{}_{}'.format(self.start_year, self.end_year)
-        else:
-            yrs = self.target_yr
-
-        of_1 = self.c.out_file_one.format(self.c.model_name, yrs)
-        of_2 = self.c.out_file_two.format(self.c.model_name, yrs)
-
-        self.build_output(of_1, self.param_1)
-        self.build_output(of_2, self.param_2)
+        self.build_output(self.out_file_1, self.param_1)
+        self.build_output(self.out_file_2, self.param_2)
 
     def log_config(self):
         """
@@ -226,8 +225,8 @@ class Prox:
             # create configuration object from string
             x = eval('self.c.{0}'.format(i))
 
-            # ignore magic objects
-            if type(x) == str and i[:2] != '__':
+            # ignore magic objects and out file names
+            if (type(x) == str) and (i[:2] != '__') and ('out_file_' not in i):
 
                 # log result
                 self.log.info('CONFIG: [PARAMETER] {0} -- [VALUE] {1}'.format(i, x))
