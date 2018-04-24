@@ -1,5 +1,9 @@
 """
-Logger for box model.
+Logger for proxymod
+
+Copyright (c) 2018, Battelle Memorial Institute
+
+Open source under license BSD 2-Clause - see LICENSE and DISCLAIMER
 
 @author:  Chris R. Vernon (chris.vernon@pnnl.gov)
 """

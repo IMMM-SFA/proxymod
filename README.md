@@ -2,6 +2,13 @@
 
 ## *A lightweight Python package to simulate model interactions*
 
+## Contact
+Chris R. Vernon (chris.vernon@pnnl.gov)
+
+## License
+Copyright (c) 2018, Battelle Memorial Institute
+Open source under license BSD 2-Clause - see LICENSE and DISCLAIMER
+
 ## Description
 
 **proxymod** enables modelers to explore multiple types of model interactations without bearing the large overhead of getting up-to-speed on learning to run multiple complex models. This package also expedites the testing of various interactions by eliminating the runtime associated with complex models by using proxy models to emulate their characteristics but run for a user-defined amount of time.
