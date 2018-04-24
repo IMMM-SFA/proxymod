@@ -1,9 +1,7 @@
 """
-Model interface for box model.
-
+Model interface for proxymod
 @author:  Chris R. Vernon (chris.vernon@pnnl.gov)
 """
-
 
 import math
 import time
@@ -61,7 +59,7 @@ class Prox:
         if (target_yr is None) and (start_yr is None):
             msg = "Either 'target_yr' or 'start_yr, end_yr, and step' need to be defined."
             self.log.error(msg)
-            raise(ValueError(msg))
+            raise (ValueError(msg))
 
         elif target_yr is None:
             yrs = '{}_{}'.format(self.start_year, self.end_year)
@@ -92,7 +90,7 @@ class Prox:
         if self.c.failure == 1:
             msg = "You raised an error on purpose."
             self.log.error(msg)
-            raise(RuntimeError(msg))
+            raise (RuntimeError(msg))
 
         # read and modify input data
         self.read_data()
@@ -107,7 +105,6 @@ class Prox:
     def set_yr_range(self):
         """
         Set year range to evaluate.
-
         :return:                list of years
         """
 
@@ -120,7 +117,6 @@ class Prox:
     def modify(self):
         """
         Modify dictionary values to be square root of each value.
-
         :param d:               dictionary {yr: value}
         :return:                dictionary {yr: value}
         """
@@ -132,7 +128,6 @@ class Prox:
     def read_csv(f, yr_range):
         """
         Read CSV to dictionary in format { yr: value }
-
         :param f:               full path with filename and extension of input CSV
         :return:                dictionary
         """
@@ -147,7 +142,6 @@ class Prox:
                     row = line.strip().split(',')
 
                     if int(row[0]) in yr_range:
-
                         d[row[0]] = float(row[1])
 
         return d
@@ -183,16 +177,14 @@ class Prox:
         else:
             msg = "Type for either input one or two must be either 'str' or 'dict'"
             self.log.error(msg)
-            raise(ValueError(msg))
+            raise (ValueError(msg))
 
     @staticmethod
     def build_output(f, d):
         """
-
         :return:
         """
         with open(f, 'w') as out:
-
             out.write('year,value\n')
 
             for k in d.keys():
@@ -227,6 +219,5 @@ class Prox:
 
             # ignore magic objects and out file names
             if (type(x) == str) and (i[:2] != '__') and ('out_file_' not in i):
-
                 # log result
                 self.log.info('CONFIG: [PARAMETER] {0} -- [VALUE] {1}'.format(i, x))

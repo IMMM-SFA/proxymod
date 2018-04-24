@@ -3,6 +3,12 @@
 # jupyter notebook checkpoints
 .ipynb_checkpoints
 
+# all build dirs
+dist
+build
+proxymod.egg-info
+
+
 # Created by .ignore support plugin (hsz.mobi)
 # pycharm
 .idea
