@@ -95,12 +95,17 @@ class Prox:
         if self.c.failure == 1:
             msg = "You raised an error on purpose."
             self.log.error(msg)
+            self.close()
+
             raise (RuntimeError(msg))
 
         # read and modify input data
         self.read_data()
 
     def close(self):
+        """
+        Clean up logger.
+        """
 
         self.log.info('Completed {}'.format(self.c.model_name))
 
@@ -187,7 +192,7 @@ class Prox:
     @staticmethod
     def build_output(f, d):
         """
-        :return:
+        Write output file.
         """
         with open(f, 'w') as out:
             out.write('year,value\n')
