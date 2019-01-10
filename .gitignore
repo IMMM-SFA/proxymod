@@ -2,7 +2,7 @@
 
 # jupyter notebook checkpoints
 .ipynb_checkpoints
-proxymod/__pychache__
+proxymod/__pycache__
 
 # all build dirs
 dist
