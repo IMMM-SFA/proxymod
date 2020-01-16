@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/119058983.svg)](https://zenodo.org/badge/latestdoi/119058983)
+
 # proxymod
 
 ## *A lightweight Python package to simulate model interactions*
