@@ -17,8 +17,17 @@ import proxymod.logger as logger
 
 class Prox:
 
-    def __init__(self, config=None, model_name=None, start_yr=None, end_yr=None, step=None,
-                 target_yr=None, in_one=None, in_two=None):
+    def __init__(self,
+                 config=None,
+                 model_name=None,
+                 start_yr=None,
+                 end_yr=None,
+                 step=None,
+                 runtime=None,
+                 failure=None,
+                 target_yr=None,
+                 in_one=None,
+                 in_two=None):
 
         self.c = ReadConfig(config, model_name, in_one, in_two)
 
@@ -39,6 +48,18 @@ class Prox:
             self.step = step
         else:
             self.step = int(step)
+
+        # how long to run
+        if runtime is None:
+            self.runtime = runtime
+        else:
+            self.runtime = int(runtime)
+
+        # how long to run before failure
+        if failure is None:
+            self.failure = failure
+        else:
+            self.failure = int(failure)
 
         # get target year
         if target_yr is None:
