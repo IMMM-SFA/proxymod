@@ -2,7 +2,7 @@
 
 # jupyter notebook checkpoints
 .ipynb_checkpoints
-proxymod/__pychache__
+proxymod/__pycache__
 
 # all build dirs
 dist
@@ -11,7 +11,6 @@ proxymod.egg-info
 
 # no outputs
 outputs
-
 
 # Created by .ignore support plugin (hsz.mobi)
 # pycharm
